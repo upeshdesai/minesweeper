@@ -8,10 +8,14 @@ public class myButton extends JButton implements ActionListener{
 	private int BOMB_VALUE = 99;
 	public static boolean bomb_trip;
 	private boolean toggled = false;
+	private MouseClickHandler mouseHandler = new MouseClickHandler();
 
+	private int rightClickCount = 0;
 	public myButton(int coordx, int coordy, String label){
 		super(label);
+		setBounds(20,10,250,100);
 		addActionListener(this);
+		this.addMouseListener(mouseHandler);
 		x = coordx;
 		y = coordy;
 	}
@@ -24,28 +28,62 @@ public class myButton extends JButton implements ActionListener{
 		return y;
 	}
 
-	public void setToggle(){
-		toggled = false;
+	public void setToggle(boolean select){
+		toggled = select;
 	}
 
+	public boolean getToggle(){
+		return toggled;
+	}
+
+	private class MouseClickHandler extends MouseAdapter {
+		public void mouseClicked(MouseEvent event){
+			if(event.getButton() == 3){
+				if(rightClickCount == 0){
+					setText("F");
+					toggled = true;
+					rightClickCount++;
+				}
+				else if(rightClickCount == 1){
+					setText("?");
+					rightClickCount++;
+				}
+				else if(rightClickCount == 2){
+					setText("");
+					rightClickCount = 0;
+					toggled = false;
+				}
+			}
+			else
+				System.out.println("Something else");
+		}
+	}
 	public void actionPerformed(ActionEvent event){
 		System.out.println(bomb_trip);
+		System.out.println("Toggle: " + toggled);
 
 		if(bomb_trip == false){
 			if(toggled == false){
+
 				System.out.println("Coords: " + getCoordx() + ", " + getCoordy());
-				System.out.println("Minecheck: " + boardBuild.minefield[getCoordx()][getCoordy()]);
-				int field_value = boardBuild.minefield[getCoordx()][getCoordy()];
+				System.out.println("Minecheck: " + myBoard.minefield[getCoordx()][getCoordy()]);
+				int field_value = myBoard.minefield[getCoordx()][getCoordy()];
 				
 				if(field_value >= BOMB_VALUE){
 					JOptionPane.showMessageDialog(this, "There was a bomb!");
 					bomb_trip = true;
-					//boardBuild.showBoard();
+					setBackground(Color.GRAY);
+					this.setText("B");
+					myBoard.showBoard();
 				}
 				else{
-					JOptionPane.showMessageDialog(this, "Number of bombs around: " + field_value);
+					//JOptionPane.showMessageDialog(this, "Number of bombs around: " + field_value);
 					setBackground(Color.GRAY);
-					if(field_value == 1)
+					if(field_value == 0){
+						myBoard.cell_depthsearch(getCoordx(), getCoordy());
+						return;
+					}
+					else if(field_value == 1)
 						setForeground(Color.BLUE);
 					else if(field_value == 2)
 						setForeground(Color.GREEN);
@@ -57,9 +95,10 @@ public class myButton extends JButton implements ActionListener{
 						setForeground(Color.RED);
 
 					this.setText(field_value + "");
+					toggled = true;
+					myBoard.emptyCellsDecr();
 				}
-				toggled = true;
-				boardBuild.emptyCellsDecr();
+				
 			}
 		}
 	}	
