@@ -42,10 +42,12 @@ public class myButton extends JButton implements ActionListener{
 				if(rightClickCount == 0){
 					setText("F");
 					toggled = true;
+					myBoard.updateMineCount(myBoard.NUM_OF_MINES - 1);
 					rightClickCount++;
 				}
 				else if(rightClickCount == 1){
 					setText("?");
+					myBoard.updateMineCount(myBoard.NUM_OF_MINES + 1);
 					rightClickCount++;
 				}
 				else if(rightClickCount == 2){

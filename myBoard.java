@@ -23,13 +23,12 @@ public class myBoard extends JFrame implements ActionListener{
 	public static int[][] minefield = new int[ROWS][COLM];
 	private JButton resetButton = new JButton("Reset");
 
-	//public static Date timer;
 	public static Timer timer;
 	public static int current_time = 0;
-
 	public static boolean time_init = false;
 
 	private static int NUM_EMPTY_CELLS = 90;
+	public static int NUM_OF_MINES = 10;
 	public static boolean bomb_trip = false;
 
 	public myBoard(){
@@ -255,6 +254,11 @@ public class myBoard extends JFrame implements ActionListener{
 		System.out.println("Empty cells remaining: " + NUM_EMPTY_CELLS);
 	}
 
+	public static void updateMineCount(int x){
+		NUM_OF_MINES = x;
+		System.out.println("Number of bombs = " + NUM_OF_MINES);
+		return;
+	}
 	public void actionPerformed(ActionEvent event){
 		current_time++;
 		System.out.println("This is the time: " + current_time);
