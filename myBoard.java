@@ -4,6 +4,7 @@ import java.awt.*;
 import java.util.*;
 import java.awt.event.*;
 import java.awt.BorderLayout;
+import javax.swing.border.*;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -20,7 +21,11 @@ public class myBoard extends JFrame implements ActionListener{
 
 
 	public static myButton[][] cells = new myButton[ROWS][COLM];
+
 	public static int[][] minefield = new int[ROWS][COLM];
+	public static generateMines mine_gen;
+
+
 	private JButton resetButton = new JButton("Reset");
 
 	public static Timer timer;
@@ -30,6 +35,8 @@ public class myBoard extends JFrame implements ActionListener{
 	private static int NUM_EMPTY_CELLS = 90;
 	public static int NUM_OF_MINES = 10;
 	public static boolean bomb_trip = false;
+	private static JLabel flagsOnBoard = new JLabel();
+	private static JLabel timeCounter = new JLabel();
 
 	public myBoard(){
 		super("Minesweeper");
@@ -39,7 +46,7 @@ public class myBoard extends JFrame implements ActionListener{
 		GridLayout grid1 = new GridLayout(10,10);
 		JPanel cellfield = new JPanel();
 
-		JMenu fileMenu = new JMenu("Help");
+		/*JMenu fileMenu = new JMenu("Help");
 		fileMenu.setMnemonic('H');
 
 		JMenuItem aboutItem = new JMenuItem("About...");
@@ -52,13 +59,14 @@ public class myBoard extends JFrame implements ActionListener{
 					"This minesweeper program was made by\nAdrian and Upesh for CS342.\n",
 					"About", JOptionPane.PLAIN_MESSAGE);
 			}
-		});
+		});*/
 
 		timer = new Timer(1000, this);
 
-		JMenuBar bar = new JMenuBar();
+		menubar bar = new menubar();
 		setJMenuBar(bar);
-		bar.add(fileMenu);
+
+
 		//setting layout to minefield panel
 		cellfield.setLayout(grid1);
 
@@ -79,21 +87,37 @@ public class myBoard extends JFrame implements ActionListener{
 				cellfield.add(cells[i][j]);
 			}
 		}
-		generateMines();
 
+
+		mine_gen = new generateMines(minefield);
+
+		flagsOnBoard.setText("" + NUM_OF_MINES);
+		flagsOnBoard.setBorder(new EmptyBorder(10,10,10,10));
+
+		timeCounter.setText("" + 0);
+		timeCounter.setBorder(new EmptyBorder(10,10,10,10));
 
 		JPanel infoField = new JPanel();
-		infoField.setLayout(new FlowLayout());
+		infoField.setLayout(new BorderLayout());
 
 		resetButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				generateMines();
+				mine_gen = new generateMines(minefield);
+				cellReset();
 				current_time = 0;
 				time_init = false;
+				timer.stop();
+				updateMineCount(10);
+				timeCounter.setText("" + current_time);
 			}
 		});
 
-		infoField.add(resetButton);
+		JPanel resetpanel = new JPanel(new FlowLayout());
+		resetpanel.add(resetButton);
+
+		infoField.add(flagsOnBoard, "West");
+		infoField.add(resetpanel, "Center");
+		infoField.add(timeCounter, "East");
 
 		//setting up window content to border layout
 		Container win_container = getContentPane();
@@ -105,58 +129,6 @@ public class myBoard extends JFrame implements ActionListener{
 		setSize(450,600);
 		setVisible(true);
 		setResizable(false);
-	}
-
-	public void generateMines(){
-		int BOMB_VALUE = 99;
-		int NUM_OF_MINES = 10;
-		myButton.bomb_trip = false;
-		cellReset();
-
-		System.out.println("Cell has been reset");
-		//fills minefield with all 0s
-		for(int [] row: minefield)
-			Arrays.fill(row, 0);
-
-		Random generator = new Random();
-		int num = generator.nextInt(100);
-
-		for(int i = 0; i <= NUM_OF_MINES; i++){
-			minefield[num / 10][num % 10] = BOMB_VALUE;
-			num = generator.nextInt(100);
-		}
-
-		//marks the minefield to tell the user how
-		//many bombs surround this cell
-
-		for(int i = 0; i < ROWS; i++){
-			for(int j = 0; j < COLM; j++){
-				if(minefield[i][j] >= BOMB_VALUE){
-					if(j != 9) // East
-						minefield[i][j + 1] += 1;
-					if(j != 0) //West
-						minefield[i][j - 1] += 1;
-					if(i != 0) //North
-						minefield[i - 1][j] += 1;
-					if(i != 9) //South
-						minefield[i + 1][j] += 1;
-					if(i != 0 && j != 0 ) //North west
-						minefield[i - 1][j - 1] += 1;
-					if(i != 0 && j != 9) // North east
-						minefield[i - 1][j + 1] += 1;
-					if(i != 9 && j != 0) // South West
-						minefield[i + 1][j - 1] += 1;
-					if(i != 9 && j != 9)// South east
-						minefield[i + 1][j + 1] += 1;
-
-				}
-			}
-		}
-		/*for(int i = 0; i < ROWS; i++){
-			for(int j = 0; j < COLM; j++){
-				System.out.println(i + "," + j + " " + minefield[i][j]);
-			}
-		}*/
 	}
 
 	public static void cell_depthsearch(int x, int y){
@@ -252,18 +224,22 @@ public class myBoard extends JFrame implements ActionListener{
 	public static void emptyCellsDecr(){
 		NUM_EMPTY_CELLS--;
 		System.out.println("Empty cells remaining: " + NUM_EMPTY_CELLS);
+
 	}
 
 	public static void updateMineCount(int x){
 		NUM_OF_MINES = x;
 		System.out.println("Number of bombs = " + NUM_OF_MINES);
+		flagsOnBoard.setText("" + NUM_OF_MINES);
 		return;
 	}
 	public void actionPerformed(ActionEvent event){
 		current_time++;
 		System.out.println("This is the time: " + current_time);
+		timeCounter.setText("" + current_time);
 		timer.restart();
 	}
+
 	public static void main (String args[]){
 		myBoard application = new myBoard();
 		application.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

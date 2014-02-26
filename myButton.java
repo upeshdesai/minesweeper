@@ -38,6 +38,10 @@ public class myButton extends JButton implements ActionListener{
 
 	private class MouseClickHandler extends MouseAdapter {
 		public void mouseClicked(MouseEvent event){
+			if(myBoard.time_init == false){
+				myBoard.timer.start();
+				myBoard.time_init = true;
+			}
 			if(event.getButton() == 3){
 				if(rightClickCount == 0){
 					setText("F");
