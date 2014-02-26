@@ -26,7 +26,7 @@ public class myBoard extends JFrame implements ActionListener{
 	public static generateMines mine_gen;
 
 
-	private JButton resetButton = new JButton("Reset");
+	private static JButton resetButton = new JButton("Reset");
 
 	public static Timer timer;
 	public static int current_time = 0;
@@ -233,6 +233,12 @@ public class myBoard extends JFrame implements ActionListener{
 		flagsOnBoard.setText("" + NUM_OF_MINES);
 		return;
 	}
+
+	public static void resetClick(){
+		resetButton.doClick();
+	}
+
+	//timer action
 	public void actionPerformed(ActionEvent event){
 		current_time++;
 		System.out.println("This is the time: " + current_time);
