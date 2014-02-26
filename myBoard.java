@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.Timer;
 import java.awt.*;
 import java.util.*;
 import java.awt.event.*;
@@ -12,7 +13,7 @@ import java.awt.event.ActionListener;
 
 
 
-public class myBoard extends JFrame{
+public class myBoard extends JFrame implements ActionListener{
 
 	private static final int ROWS = 10;
 	private static final int COLM = 10;
@@ -22,6 +23,11 @@ public class myBoard extends JFrame{
 	public static int[][] minefield = new int[ROWS][COLM];
 	private JButton resetButton = new JButton("Reset");
 
+	//public static Date timer;
+	public static Timer timer;
+	public static int current_time = 0;
+
+	public static boolean time_init = false;
 
 	private static int NUM_EMPTY_CELLS = 90;
 	public static boolean bomb_trip = false;
@@ -49,13 +55,14 @@ public class myBoard extends JFrame{
 			}
 		});
 
-
+		timer = new Timer(1000, this);
 
 		JMenuBar bar = new JMenuBar();
 		setJMenuBar(bar);
 		bar.add(fileMenu);
 		//setting layout to minefield panel
 		cellfield.setLayout(grid1);
+
 
 		try {
             UIManager.setLookAndFeel( UIManager.getCrossPlatformLookAndFeelClassName() );
@@ -82,6 +89,8 @@ public class myBoard extends JFrame{
 		resetButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				generateMines();
+				current_time = 0;
+				time_init = false;
 			}
 		});
 
@@ -244,6 +253,12 @@ public class myBoard extends JFrame{
 	public static void emptyCellsDecr(){
 		NUM_EMPTY_CELLS--;
 		System.out.println("Empty cells remaining: " + NUM_EMPTY_CELLS);
+	}
+
+	public void actionPerformed(ActionEvent event){
+		current_time++;
+		System.out.println("This is the time: " + current_time);
+		timer.restart();
 	}
 	public static void main (String args[]){
 		myBoard application = new myBoard();

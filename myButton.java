@@ -61,7 +61,10 @@ public class myButton extends JButton implements ActionListener{
 	public void actionPerformed(ActionEvent event){
 		System.out.println(bomb_trip);
 		System.out.println("Toggle: " + toggled);
-
+		if(myBoard.time_init == false){
+			myBoard.timer.start();
+			myBoard.time_init = true;
+		}
 		if(bomb_trip == false){
 			if(toggled == false){
 
@@ -70,10 +73,11 @@ public class myButton extends JButton implements ActionListener{
 				int field_value = myBoard.minefield[getCoordx()][getCoordy()];
 				
 				if(field_value >= BOMB_VALUE){
-					JOptionPane.showMessageDialog(this, "There was a bomb!");
 					bomb_trip = true;
 					setBackground(Color.GRAY);
 					this.setText("B");
+					myBoard.timer.stop();
+					JOptionPane.showMessageDialog(this, "There was a bomb!");
 					myBoard.showBoard();
 				}
 				else{
