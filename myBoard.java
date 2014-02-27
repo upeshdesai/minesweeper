@@ -113,10 +113,6 @@ public class myBoard extends JFrame implements ActionListener{
 		setVisible(true);
 		setResizable(false);
 		System.out.println("Button size: " + cells[0][0].getWidth() + "." + cells[0][0].getWidth());
-
-		//DEBUG CODE
-		//timer.stop();
-		//score gameWon = new score(10);
 	}
 
 	public static void cell_depthsearch(int x, int y){
@@ -182,6 +178,7 @@ public class myBoard extends JFrame implements ActionListener{
 					cells[i][j].setBackground(Color.GRAY);
 					cells[i][j].setForeground(Color.RED);
 					cells[i][j].setToggle(true);
+					cells[i][j].setText("");
 	                Icon mine = new ImageIcon("mine.png");
 					//this.setText("B");
 					cells[i][j].setIcon(mine);
@@ -215,84 +212,6 @@ public class myBoard extends JFrame implements ActionListener{
 
 	}
 
-	/*public static void gameWon(){
-		JOptionPane.showMessageDialog(null, 
-					"You have won the game. Total time: " + current_time,
-					"YOU WIN!", JOptionPane.PLAIN_MESSAGE);
-		timer.stop();
-		boolean highScore = false;
-
-		List<Integer> list = new ArrayList<Integer>();
-		List<String> names = new ArrayList<String>();
-
-
-		File file = new File("topten.txt");
-		BufferedReader reader = null;
-
-		try{
-			reader = new BufferedReader(new FileReader(file));
-			String text = null;
-			int counter = 0;
-			while((text = reader.readLine()) != null && counter < 10){
-				list.add(Integer.parseInt(text));
-				counter++;
-			}
-
-			names.add(text);
-			while((text = reader.readLine()) != null){
-				names.add(text);
-			}
-		} 
-		catch (FileNotFoundException e){
-		  	e.printStackTrace();
-		}
-		catch (IOException e){
-		  	e.printStackTrace();
-		} 
-		finally{
-		  	try{
-		  		if(reader != null){
-		  			reader.close();
-		  		}
-		  	} 
-		  	catch(IOException e){
-
-		  	}
-		}
-
-		current_time = 10;
-		for(int i = 0; i < list.size(); i++){
-		  	if(list.get(i) > current_time){
-		  		list.remove(i);
-		  		list.add(i, current_time);
-		  		highScore = true;
-		  		break;
-		  	}
-		}
-
-		for(int i = 0; i < list.size(); i++){
-			System.out.println("That score: " + names.get(i) + " " + list.get(i));
-  		}
-  		if(highScore){
-
-  			try{
-		  		PrintWriter writer = new PrintWriter(file);
-		  		for(int i = 0; i < list.size(); i++){
-		  			writer.println(list.get(i));
-	 			}
-	 			for(int i = 0; i < names.size(); i++){
-	 				writer.println(names.get(i));
-	 			}
-		 		writer.close();
-			}
-			catch (FileNotFoundException e){
-		  	e.printStackTrace();
-			}
-  		}
-		
-		System.exit(0);
-
-	}*/
 
 	public static void updateMineCount(int x){
 		NUM_OF_MINES = x;

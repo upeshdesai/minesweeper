@@ -87,9 +87,6 @@ public class score{
 		  		e.printStackTrace();
 			}
   		}
-		
-		System.exit(0);
-
 	}
 
 	public static void showTopTen(){

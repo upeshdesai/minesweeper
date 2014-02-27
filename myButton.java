@@ -98,7 +98,7 @@ public class myButton extends JButton implements ActionListener{
 					bomb_trip = true;
 					Icon mine = new ImageIcon("mine.png");
 					//this.setText("B");
-					//setIcon(mine);
+					setIcon(mine);
 					setBackground(Color.GRAY);
 					myBoard.timer.stop();
 					toggled = true;
