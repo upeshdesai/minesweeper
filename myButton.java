@@ -8,12 +8,13 @@ public class myButton extends JButton implements ActionListener{
 	private int BOMB_VALUE = 99;
 	public static boolean bomb_trip;
 	private boolean toggled = false;
+	private boolean right_click_lock = false;
 	private MouseClickHandler mouseHandler = new MouseClickHandler();
 
 	private int rightClickCount = 0;
 	public myButton(int coordx, int coordy, String label){
 		super(label);
-		setBounds(20,10,250,100);
+		setBounds(20,20,300,100);
 		addActionListener(this);
 		this.addMouseListener(mouseHandler);
 		x = coordx;
@@ -36,33 +37,45 @@ public class myButton extends JButton implements ActionListener{
 		return toggled;
 	}
 
+	public void resetRightClick(){
+		rightClickCount = 0;
+	}
+
+	public void setrightClickLock(boolean select){
+		right_click_lock = select;
+	}
+
 	private class MouseClickHandler extends MouseAdapter {
 		public void mouseClicked(MouseEvent event){
 			if(myBoard.time_init == false){
 				myBoard.timer.start();
 				myBoard.time_init = true;
 			}
-			if(event.getButton() == 3){
-				if(rightClickCount == 0){
-					setText("F");
-					toggled = true;
-					myBoard.updateMineCount(myBoard.NUM_OF_MINES - 1);
-					rightClickCount++;
+			if(right_click_lock == false){
+				if(event.getButton() == 3){
+					if(rightClickCount == 0){
+						setText("M");
+						toggled = true;
+						myBoard.updateMineCount(myBoard.NUM_OF_MINES - 1);
+						rightClickCount++;
+					}
+					else if(rightClickCount == 1){
+						setText("?");
+						myBoard.updateMineCount(myBoard.NUM_OF_MINES + 1);
+						rightClickCount++;
+					}
+					else if(rightClickCount == 2){
+						right_click_lock = false;
+						setText("");
+						rightClickCount = 0;
+						toggled = false;
+					}
 				}
-				else if(rightClickCount == 1){
-					setText("?");
-					myBoard.updateMineCount(myBoard.NUM_OF_MINES + 1);
-					rightClickCount++;
-				}
-				else if(rightClickCount == 2){
-					setText("");
-					rightClickCount = 0;
-					toggled = false;
-				}
-			}
 			else
 				System.out.println("Something else");
+			}
 		}
+			
 	}
 	public void actionPerformed(ActionEvent event){
 		System.out.println(bomb_trip);
@@ -71,6 +84,7 @@ public class myButton extends JButton implements ActionListener{
 			myBoard.timer.start();
 			myBoard.time_init = true;
 		}
+		
 		if(bomb_trip == false){
 			if(toggled == false){
 
@@ -103,13 +117,21 @@ public class myButton extends JButton implements ActionListener{
 						setForeground(Color.ORANGE);
 					else if(field_value == 5)
 						setForeground(Color.RED);
+					else if(field_value == 6)
+						setForeground(Color.CYAN);
+					else if(field_value == 7)
+						setForeground(Color.PINK);
+					else if(field_value == 8)
+						setForeground(Color.WHITE);
 
 					this.setText(field_value + "");
 					toggled = true;
 					myBoard.emptyCellsDecr();
+					right_click_lock = true;
 				}
 				
 			}
 		}
-	}	
+	}
+
 }

@@ -1,14 +1,7 @@
 import javax.swing.*;
-import javax.swing.Timer;
 import java.awt.*;
 import java.util.*;
 import java.awt.event.*;
-import java.awt.BorderLayout;
-import javax.swing.border.*;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 

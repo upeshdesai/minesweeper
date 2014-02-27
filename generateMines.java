@@ -16,7 +16,7 @@ public class generateMines{
 		Random generator = new Random();
 		int num = generator.nextInt(100);
 
-		for(int i = 0; i <= NUM_OF_MINES; i++){
+		for(int i = 0; i < NUM_OF_MINES; i++){
 			minefield[num / 10][num % 10] = BOMB_VALUE;
 			num = generator.nextInt(100);
 		}

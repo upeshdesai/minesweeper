@@ -2,16 +2,13 @@ import javax.swing.*;
 import javax.swing.Timer;
 import java.awt.*;
 import java.util.*;
+import java.util.Collections;
+import java.util.List;
 import java.awt.event.*;
-import java.awt.BorderLayout;
 import javax.swing.border.*;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.io.*;
 
 
 public class myBoard extends JFrame implements ActionListener{
@@ -30,6 +27,7 @@ public class myBoard extends JFrame implements ActionListener{
 
 	public static Timer timer;
 	public static int current_time = 0;
+
 	public static boolean time_init = false;
 
 	private static int NUM_EMPTY_CELLS = 90;
@@ -40,7 +38,6 @@ public class myBoard extends JFrame implements ActionListener{
 
 	public myBoard(){
 		super("Minesweeper");
-
 
 		//creating minefield gridlayout and panel 
 		GridLayout grid1 = new GridLayout(10,10);
@@ -126,9 +123,10 @@ public class myBoard extends JFrame implements ActionListener{
 
 		win_container.add(cellfield, BorderLayout.CENTER);
 		win_container.add(infoField, BorderLayout.NORTH);
-		setSize(450,600);
+		setSize(500,600);
 		setVisible(true);
 		setResizable(false);
+		gameWon();
 	}
 
 	public static void cell_depthsearch(int x, int y){
@@ -141,6 +139,7 @@ public class myBoard extends JFrame implements ActionListener{
                 cells[x][y].setToggle(true);
                 cells[x][y].setText(0 + "");
                 cells[x][y].setBackground(Color.GRAY);
+                cells[x][y].setrightClickLock(true);
 
             	cell_depthsearch(x-1, y);
             	cell_depthsearch(x+1, y);
@@ -166,11 +165,18 @@ public class myBoard extends JFrame implements ActionListener{
 							cells[x][y].setForeground(Color.ORANGE);
 						else if(z == 5)
 							cells[x][y].setForeground(Color.RED);
+						else if(z == 6)
+							cells[x][y].setForeground(Color.CYAN);
+						else if(z == 7)
+							cells[x][y].setForeground(Color.PINK);
+						else if(z == 8)
+							cells[x][y].setForeground(Color.WHITE);
 	                    
 	                    emptyCellsDecr();
 	                    cells[x][y].setToggle(true);
 	                    cells[x][y].setText(z + "");
 	                   	cells[x][y].setBackground(Color.GRAY);
+	                   	cells[x][y].setrightClickLock(true);
 	                   	return;
 	                }
             	}
@@ -182,13 +188,13 @@ public class myBoard extends JFrame implements ActionListener{
 	public static void showBoard(){
 		for(int i = 0; i < ROWS; i++){
 			for(int j = 0; j < COLM; j++){
-				cells[i][j].setBackground(Color.GRAY);
 				if(minefield[i][j] >= 99){
+					cells[i][j].setBackground(Color.GRAY);
 					cells[i][j].setForeground(Color.RED);
 					cells[i][j].setToggle(true);
 	                cells[i][j].setText("B");
 				}
-				else{
+				/*else{
 	                int z = minefield[i][j];
                     if(z == 1)
 						cells[i][j].setForeground(Color.BLUE);
@@ -204,7 +210,7 @@ public class myBoard extends JFrame implements ActionListener{
                     cells[i][j].setToggle(true);
                     cells[i][j].setText(z + "");
                    	cells[i][j].setBackground(Color.GRAY);
-                }
+                }*/
             }
 		}
 		
@@ -216,6 +222,8 @@ public class myBoard extends JFrame implements ActionListener{
 				cells[i][j].setForeground(null);
 				cells[i][j].setText("");
 				cells[i][j].setToggle(false);
+				cells[i][j].resetRightClick();
+				cells[i][j].setrightClickLock(false);
 			}
 		}
 		NUM_EMPTY_CELLS = 90;
@@ -224,6 +232,60 @@ public class myBoard extends JFrame implements ActionListener{
 	public static void emptyCellsDecr(){
 		NUM_EMPTY_CELLS--;
 		System.out.println("Empty cells remaining: " + NUM_EMPTY_CELLS);
+		if(NUM_EMPTY_CELLS == 0){
+			gameWon();
+		}
+
+	}
+
+	public static void gameWon(){
+		JOptionPane.showMessageDialog(null, 
+					"You have won the game. Total time: " + current_time,
+					"YOU WIN!", JOptionPane.PLAIN_MESSAGE);
+		timer.stop();
+
+		List<Integer> list = new ArrayList<Integer>();
+		File file = new File("topten.txt");
+		BufferedReader reader = null;
+
+		try{
+			reader = new BufferedReader(new FileReader(file));
+			String text = null;
+
+			while((text = reader.readLine()) != null){
+				list.add(Integer.parseInt(text));
+			}
+		} catch (FileNotFoundException e){
+		  	e.printStackTrace();
+		  }
+		  catch (IOException e){
+		  	e.printStackTrace();
+		  } finally{
+		  	try{
+		  		if(reader != null){
+		  			reader.close();
+		  		}
+		  	} 
+		  	catch(IOException e){
+
+		  	}
+		  }
+		  
+		  current_time = 10;
+		  for(int i = 0; i < list.size(); i++){
+		  	if(list.get(i) > current_time){
+		  		list.remove(i);
+		  		list.add(i, current_time);
+		  		break;
+		  	}
+		  }
+
+		  for(int i = 0; i < list.size(); i++){
+		  	System.out.println("That score: " + i + " " + list.get(i));
+		  }
+
+
+		  System.exit(0);
 
 	}
 
