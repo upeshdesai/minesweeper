@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
+import java.io.*;
 import java.awt.event.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,6 +18,7 @@ public class menubar extends JMenuBar{
 
 		JMenuItem resetItem = new JMenuItem("Reset");
 		JMenuItem topTenItem = new JMenuItem("Top Ten");
+		JMenuItem resetTopTen = new JMenuItem("Reset Top Ten");
 		JMenuItem exitItem = new JMenuItem("Exit");
 		JMenuItem aboutItem = new JMenuItem("About...");
 		JMenuItem helpItem = new JMenuItem("Help");
@@ -29,6 +31,7 @@ public class menubar extends JMenuBar{
 
 		gameMenu.add(resetItem);
 		gameMenu.add(topTenItem);
+		gameMenu.add(resetTopTen);
 		gameMenu.add(exitItem);
 		helpMenu.add(helpItem);
 		helpMenu.add(aboutItem);
@@ -38,6 +41,19 @@ public class menubar extends JMenuBar{
 				myBoard.resetClick();
 			}
 		});
+
+		resetTopTen.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent event){
+				score.resetScores();
+			}
+		});
+
+		topTenItem.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent event){
+				score.showTopTen();
+			}
+		});
+
 		exitItem.addActionListener(new ActionListener(){
 			public void actionPerformed( ActionEvent event){
 				System.exit(0);
@@ -65,5 +81,9 @@ public class menubar extends JMenuBar{
 
 		add(gameMenu);
 		add(helpMenu);
+	}
+
+	public void openTopTen(){
+
 	}
 }

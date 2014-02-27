@@ -43,20 +43,6 @@ public class myBoard extends JFrame implements ActionListener{
 		GridLayout grid1 = new GridLayout(10,10);
 		JPanel cellfield = new JPanel();
 
-		/*JMenu fileMenu = new JMenu("Help");
-		fileMenu.setMnemonic('H');
-
-		JMenuItem aboutItem = new JMenuItem("About...");
-		aboutItem.setMnemonic('A');
-
-		fileMenu.add(aboutItem);
-		aboutItem.addActionListener( new ActionListener(){
-			public void actionPerformed( ActionEvent event){
-				JOptionPane.showMessageDialog(myBoard.this, 
-					"This minesweeper program was made by\nAdrian and Upesh for CS342.\n",
-					"About", JOptionPane.PLAIN_MESSAGE);
-			}
-		});*/
 
 		timer = new Timer(1000, this);
 
@@ -126,7 +112,11 @@ public class myBoard extends JFrame implements ActionListener{
 		setSize(500,600);
 		setVisible(true);
 		setResizable(false);
-		gameWon();
+		System.out.println("Button size: " + cells[0][0].getWidth() + "." + cells[0][0].getWidth());
+
+		//DEBUG CODE
+		//timer.stop();
+		//score gameWon = new score(10);
 	}
 
 	public static void cell_depthsearch(int x, int y){
@@ -194,23 +184,6 @@ public class myBoard extends JFrame implements ActionListener{
 					cells[i][j].setToggle(true);
 	                cells[i][j].setText("B");
 				}
-				/*else{
-	                int z = minefield[i][j];
-                    if(z == 1)
-						cells[i][j].setForeground(Color.BLUE);
-					else if(z == 2)
-						cells[i][j].setForeground(Color.GREEN);
-					else if(z == 3)
-						cells[i][j].setForeground(Color.YELLOW);
-					else if(z == 4)
-						cells[i][j].setForeground(Color.ORANGE);
-					else if(z == 5)
-						cells[i][j].setForeground(Color.RED);
-
-                    cells[i][j].setToggle(true);
-                    cells[i][j].setText(z + "");
-                   	cells[i][j].setBackground(Color.GRAY);
-                }*/
             }
 		}
 		
@@ -233,34 +206,47 @@ public class myBoard extends JFrame implements ActionListener{
 		NUM_EMPTY_CELLS--;
 		System.out.println("Empty cells remaining: " + NUM_EMPTY_CELLS);
 		if(NUM_EMPTY_CELLS == 0){
-			gameWon();
+			timer.stop();
+			score gameWon = new score(current_time);
 		}
 
 	}
 
-	public static void gameWon(){
+	/*public static void gameWon(){
 		JOptionPane.showMessageDialog(null, 
 					"You have won the game. Total time: " + current_time,
 					"YOU WIN!", JOptionPane.PLAIN_MESSAGE);
 		timer.stop();
+		boolean highScore = false;
 
 		List<Integer> list = new ArrayList<Integer>();
+		List<String> names = new ArrayList<String>();
+
+
 		File file = new File("topten.txt");
 		BufferedReader reader = null;
 
 		try{
 			reader = new BufferedReader(new FileReader(file));
 			String text = null;
-
-			while((text = reader.readLine()) != null){
+			int counter = 0;
+			while((text = reader.readLine()) != null && counter < 10){
 				list.add(Integer.parseInt(text));
+				counter++;
 			}
-		} catch (FileNotFoundException e){
+
+			names.add(text);
+			while((text = reader.readLine()) != null){
+				names.add(text);
+			}
+		} 
+		catch (FileNotFoundException e){
 		  	e.printStackTrace();
-		  }
-		  catch (IOException e){
+		}
+		catch (IOException e){
 		  	e.printStackTrace();
-		  } finally{
+		} 
+		finally{
 		  	try{
 		  		if(reader != null){
 		  			reader.close();
@@ -269,25 +255,41 @@ public class myBoard extends JFrame implements ActionListener{
 		  	catch(IOException e){
 
 		  	}
-		  }
-		  
-		  current_time = 10;
-		  for(int i = 0; i < list.size(); i++){
+		}
+
+		current_time = 10;
+		for(int i = 0; i < list.size(); i++){
 		  	if(list.get(i) > current_time){
 		  		list.remove(i);
 		  		list.add(i, current_time);
+		  		highScore = true;
 		  		break;
 		  	}
-		  }
+		}
 
-		  for(int i = 0; i < list.size(); i++){
-		  	System.out.println("That score: " + i + " " + list.get(i));
-		  }
+		for(int i = 0; i < list.size(); i++){
+			System.out.println("That score: " + names.get(i) + " " + list.get(i));
+  		}
+  		if(highScore){
 
+  			try{
+		  		PrintWriter writer = new PrintWriter(file);
+		  		for(int i = 0; i < list.size(); i++){
+		  			writer.println(list.get(i));
+	 			}
+	 			for(int i = 0; i < names.size(); i++){
+	 				writer.println(names.get(i));
+	 			}
+		 		writer.close();
+			}
+			catch (FileNotFoundException e){
+		  	e.printStackTrace();
+			}
+  		}
+		
+		System.exit(0);
 
-		  System.exit(0);
-
-	}
+	}*/
 
 	public static void updateMineCount(int x){
 		NUM_OF_MINES = x;

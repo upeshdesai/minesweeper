@@ -95,7 +95,9 @@ public class myButton extends JButton implements ActionListener{
 				if(field_value >= BOMB_VALUE){
 					bomb_trip = true;
 					setBackground(Color.GRAY);
+					//Icon mine = new ImageIcon("mine.png");
 					this.setText("B");
+					//setIcon(mine);
 					myBoard.timer.stop();
 					JOptionPane.showMessageDialog(this, "There was a bomb!");
 					myBoard.showBoard();
