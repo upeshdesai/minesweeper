@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.border.*;
 
 public class myButton extends JButton implements ActionListener{
 	private int x;
@@ -15,6 +16,7 @@ public class myButton extends JButton implements ActionListener{
 	public myButton(int coordx, int coordy, String label){
 		super(label);
 		setBounds(20,20,300,100);
+		setLayout(new BorderLayout());
 		addActionListener(this);
 		this.addMouseListener(mouseHandler);
 		x = coordx;
@@ -94,11 +96,12 @@ public class myButton extends JButton implements ActionListener{
 				
 				if(field_value >= BOMB_VALUE){
 					bomb_trip = true;
-					setBackground(Color.GRAY);
-					//Icon mine = new ImageIcon("mine.png");
-					this.setText("B");
+					Icon mine = new ImageIcon("mine.png");
+					//this.setText("B");
 					//setIcon(mine);
+					setBackground(Color.GRAY);
 					myBoard.timer.stop();
+					toggled = true;
 					JOptionPane.showMessageDialog(this, "There was a bomb!");
 					myBoard.showBoard();
 				}

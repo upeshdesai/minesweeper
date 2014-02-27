@@ -182,7 +182,9 @@ public class myBoard extends JFrame implements ActionListener{
 					cells[i][j].setBackground(Color.GRAY);
 					cells[i][j].setForeground(Color.RED);
 					cells[i][j].setToggle(true);
-	                cells[i][j].setText("B");
+	                Icon mine = new ImageIcon("mine.png");
+					//this.setText("B");
+					cells[i][j].setIcon(mine);
 				}
             }
 		}
@@ -197,6 +199,7 @@ public class myBoard extends JFrame implements ActionListener{
 				cells[i][j].setToggle(false);
 				cells[i][j].resetRightClick();
 				cells[i][j].setrightClickLock(false);
+				cells[i][j].setIcon(null);
 			}
 		}
 		NUM_EMPTY_CELLS = 90;
